@@ -40,4 +40,4 @@ $(document).ready(function () {
   checkApiStatus();
 
   setInterval(checkApiStatus, 5000);
-});
+});  
