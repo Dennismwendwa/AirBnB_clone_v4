@@ -13,7 +13,6 @@ $(document).ready(function () {
 */
 
 $(document).ready(function() {
-  console.log("Script executed"); 
   let selectedAmenities = {};
 
   $('input[type="checkbox"]').change(function() {
@@ -31,4 +30,5 @@ $(document).ready(function() {
     const selectedAmenitiesList = Object.values(selectedAmenities).join(', ');
     $('.amenities h4').text(selectedAmenitiesList);
   });
+
 });
