@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../static/styles/4-common.css">
+    <link rel="stylesheet" type="text/css" href="../static/styles/3-header.css">
+    <link rel="stylesheet" type="text/css" href="../static/styles/3-footer.css">
+    <link rel="stylesheet" type="text/css" href="../static/styles/6-filters.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}?cache_id={{ cache_id }}">
+    <link type="text/css" rel="stylesheet" href="../static/styles/8-places.css">
+    <link rel="icon" href="../static/images/icon.png" />
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="{{ url_for('static', filename='scripts/101-hbnb.js') }}?cache_id={{ cache_id }}"></script>
+    <title>HBnB</title>
+  </head>
+  <body>
+    <header>
+      <div class="logo"></div>
+      <div id="api_status" class="available"></div>
+    </header>
+    <div class="container">
+      <section class="filters">
+	<div class="locations">
+	  <h3>States</h3>
+	  <h4>&nbsp;</h4>
+	  <div class="popover">
+	    <ul>
+	      {% for state in states %}
+	      <li>
+		<input type="checkbox" data-id="{{ state[0].id }}" data-name="{{ state[0].name }}">
+		<h2>{{ state[0].name }}:</h2>
+		<ul>
+		  {% for city in state[1] %}
+		  <li>
+	            <input type="checkbox" data-id="{{ city.id }}" data-name="{{ city.name }}">
+		    {{ city.name }}
+		  </li>
+		  {% endfor %}
+		</ul>
+	      </li>
+	      {% endfor %}
+	    </ul>
+	  </div>
+	</div>
+	<div class="amenities">
+	  <h3>Amenities</h3>
+	  <h4>&nbsp;</h4>
+	  <div class="popover">
+	    <ul>
+	      {% for amenity in amenities %}
+	      <li>
+		<input type="checkbox" data-id="{{ amenity.id }}" data-name="{{ amenity.name }}">
+	         <label for="amenity-{{ amenity.id }}" style="margin-left: 10px;">{{ amenity.name }}</label>
+	      </li>
+	      {% endfor %}
+	    </ul>
+	  </div>
+	</div>
+	<button type="button">Search</button>
+	<!-- task 7 dennis your are need in this task pls fix it-->
+	 <div class="reviews">
+	    <h2>2 Reviews</h2>
+	    <ul class="amenities_list ">
+	      <li>
+	         <div>
+		    <h3  class="amenities_magin"><strong>From John the 14th january 2020</strong></h3>
+		     <p class="">In the last couple of years, several plantations, 
+		       like McLeod, have started giving more information about 
+		       the history of slavery. That is very important to 
+		       Charleston and what happened here.</p>
+		  </div>
+		</li>
+	      <li class="amenities_list">
+		<div>
+		<h3 class="amenities_magin"><strong>From Katherine the 12 december 2021</strong></h3>
+		<p>One of the museums that you can do in less than a half hour 
+		is the Old Slave Mart Museum, and that's not on most tourists’ radars.</p>
+		</div>
+		</li>
+
+		</ul>
+		</div>
+		<!----------- ends here i copied it from ur repo Airbnb ---->		
+
+      </section>
+      <div class="placesh1"><h1>Places</h1></div>
+      <section class="places">
+	<!-- <h1>Places</h1> -->
+      </section>
+    </div>
+    <footer>
+      <p>Holberton School</p>
+    </footer>
+  </body>
+</html>
