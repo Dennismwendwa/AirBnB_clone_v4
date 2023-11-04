@@ -1,14 +1,23 @@
 $(document).ready(function () {
-  $('input[type="checkbox"]').change(function () {
-    var amenityIds = [];
 
-    $('input[type="checkbox"]:checked').each(function () {
-      amenityIds.push($(this).data('id'));
-    });
+  let selectedAmenities = {};
 
-    $('.amenities h4').text(amenityIds.join(', '));
+  $('input[type="checkbox"]').change(function() {
+    const amenityId = $(this).data("id");
+    const amenityName = $(this).data("name");
+
+    if (this.checked) {
+      selectedAmenities[amenityId] = amenityName;
+      $(this).parent().addClass("selected-amanity");
+    } else {
+      delete selectedAmenities[amenityId];
+      $(this).parent().removeClass("selected-amenity");
+    }
+
+    const selectedAmenitiesList = Object.values(selectedAmenities).join(', ');
+    $('.amenities h4').text(selectedAmenitiesList);
   });
-
+ 
   function checkApiStatus() {
     $.ajax({
       url: 'http://0.0.0.0:5001/api/v1/status/',
@@ -16,8 +25,10 @@ $(document).ready(function () {
       success: function(data) {
 	if (data.status === 'OK') {
 	  $('#api_status').addClass('available');
+    
 	} else {
 	  $('#api_status').removeClass('available');
+  
 	}
       },
       error: function() {
@@ -30,42 +41,66 @@ $(document).ready(function () {
 
   setInterval(checkApiStatus, 5000);
 
+});
 
-  document.addEventListener('DOMContentLoaded', function () {
-    $.ajax({
-      type: 'POST',
-      url: 'http://0.0.0.0:5001/api/v1/places_search/',
-      contentType: 'application/json',
-      data: JSON.stringify({ amenities: checkedAmenities }),
-      success: function (data) {
+$(document).ready(function() {
 
-	document.querySelector('.places').innerHTML = '';
-
-	for (const place of data) {
-	  const article = document.createElement('article');
-	  article.innerHTML = `
-	    <div class="title_box">
-	      <h2>${place.name}</h2>
+  $.ajax({
+    type: "POST",
+    url: "http://0.0.0.0:5001/api/v1/places_search",
+    contentType: "application/json",
+    data: JSON.stringify({}),
+    success: function(data) {
+      
+      data.forEach(function(place) {
+        const placeHTML = `
+          <article>
+            <div class="title_box">
+              <h2>${place.name}</h2>
               <div class="price_by_night">$${place.price_by_night}</div>
             </div>
             <div class="information">
-              <div class="max_guest">${place.max_guest} Guest${place.max_guest !== 1 ? 's' : ''}</div>
-              <div class="number_rooms">${place.number_rooms} Bedroom${place.number_rooms !== 1 ? 's' : ''}</div>
-              <div class="number_bathrooms">${place.number_bathrooms} Bathroom${place.number_bathrooms !== 1 ? 's' : ''}</div>
-             </div>
-             <div class="user">
-                <b>Owner:</b> ${place.user.first_name} ${place.user.last_name}
-             </div>
-             <div class="description">
-                ${place.description}
-             </div>
-           `;
-       document.querySelector('.places').appendChild(article);
+              <div class="max_guest">${place.max_guest} Guests</div>
+              <div class="number_rooms">${place.number_rooms} Bedrooms</div>
+              <div class="number_bathrooms">${place.number_bathrooms} Bathroom</div>
+            </div>
+            <div class="description">
+              ${place.description}
+            </div>
+          </article>
+        `;
+
+        $("section.places").append(placeHTML);
+      });
+    },
+    error: function(error) {
+      console.log("Error fetching data: " + error);
+    }
+  });
+});
+
+// request to search for matching amenites
+$(document).ready(function() {
+
+  $('button').click(function() {
+    const selectedAmenityIDs = [];
+
+    $('input[type="checkbox"]:checked').each(function() {
+      const amenityId = $(this).data("id");
+      selectedAmenityIDs.push(amenityId);
+    });
+
+    $.ajax({
+      type: "POST",
+      url: "http://0.0.0.0:5001/api/v1/places_search",
+      contentType: "application/json",
+      data: JSON.stringify({ amenities: selectedAmenityIDs }),
+      success: function(data) {
+        console.log("Places data based on selected amenities:", data);
+      },
+      error: function(error) {
+        console.log("Error fetching data: " + error);
       }
-     },
-     error: function (error) {
-      console.error('Error fetching places:', error);
-     },
     });
   });
 });
